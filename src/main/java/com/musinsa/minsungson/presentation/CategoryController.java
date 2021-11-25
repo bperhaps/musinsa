@@ -2,11 +2,9 @@ package com.musinsa.minsungson.presentation;
 
 import com.musinsa.minsungson.application.CategoryService;
 import com.musinsa.minsungson.presentation.dto.CreateCategoryRequest;
+import com.musinsa.minsungson.presentation.dto.UpdateCategoryRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -25,5 +23,19 @@ public class CategoryController {
         Long id = categoryService.create(request);
 
         return ResponseEntity.created(URI.create("/api/categories/" + id)).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdateCategoryRequest request) {
+        categoryService.update(id, request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        categoryService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,7 @@
 package com.musinsa.minsungson.acceptance;
 
 import com.musinsa.minsungson.presentation.dto.CreateCategoryRequest;
+import com.musinsa.minsungson.presentation.dto.UpdateCategoryRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -28,6 +29,25 @@ public class AcceptanceTest {
                 .body(createCategoryRequest)
                 .when()
                 .post("/api/categories")
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> update(Long id, UpdateCategoryRequest updateCategoryRequest) {
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(updateCategoryRequest)
+                .when()
+                .put("/api/categories/" + id)
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> delete(Long id) {
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/api/categories/" + id)
                 .then()
                 .extract();
     }

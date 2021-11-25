@@ -18,25 +18,37 @@ public class Category {
     @Embedded
     private Categories categories;
 
-    @Column(name = "orderingNumber")
+    @Column(name = "ordering_number")
     private Long orderingNumber;
+
+    @Column(name = "parent_id")
+    private Long parentId;
 
     protected Category() {
     }
 
     public Category(String name) {
-        this(null, name, new Categories(new ArrayList<>()), 0L);
+        this(name, null, null);
     }
 
     public Category(String name, Long orderingNumber) {
-        this(null, name, new Categories(new ArrayList<>()), orderingNumber);
+        this(name, orderingNumber, null);
     }
 
-    public Category(Long id, String name, Categories categories, Long orderingNumber) {
+    public Category(String name, Long orderingNumber, Long parentId) {
+        this(null, name, new Categories(new ArrayList<>()), orderingNumber, parentId);
+    }
+
+    public Category(Long id, String name, Categories categories, Long orderingNumber, Long parentId) {
         this.id = id;
         this.name = name;
         this.categories = categories;
         this.orderingNumber = orderingNumber;
+        this.parentId = parentId;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
     }
 
     public void add(Category category) {
@@ -45,6 +57,14 @@ public class Category {
 
     public void add(Category category, Long index) {
         this.categories.add(category, index);
+    }
+
+    public void removeChild(Category category) {
+        this.categories.remove(category);
+    }
+
+    public boolean isSameParentId(Long parentId) {
+        return this.parentId.equals(parentId);
     }
 
     protected void changeOrderingNumber(long orderingNumber) {
@@ -65,6 +85,10 @@ public class Category {
 
     public Long getOrderingNumber() {
         return orderingNumber;
+    }
+
+    public Long getParentId() {
+        return parentId;
     }
 
     @Override

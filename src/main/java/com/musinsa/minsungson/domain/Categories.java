@@ -60,6 +60,11 @@ public class Categories {
         }
     }
 
+    public void remove(Category category) {
+        this.value.remove(category);
+        changeOrderingNumber();
+    }
+
     public List<Category> getValue() {
         return value;
     }
