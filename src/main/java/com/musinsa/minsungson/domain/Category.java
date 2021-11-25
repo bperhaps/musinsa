@@ -43,7 +43,7 @@ public class Category {
         this.categories.add(category);
     }
 
-    public void add(Category category, int index) {
+    public void add(Category category, Long index) {
         this.categories.add(category, index);
     }
 

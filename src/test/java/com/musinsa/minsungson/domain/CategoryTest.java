@@ -56,7 +56,7 @@ class CategoryTest {
     @ParameterizedTest
     @MethodSource("getParametersForAddInIndex")
     void addInIndex(List<Category> categories, List<String> expected) {
-        categories.forEach(newCategory -> category.add(newCategory, newCategory.getOrderingNumber().intValue()));
+        categories.forEach(newCategory -> category.add(newCategory, newCategory.getOrderingNumber()));
 
         List<String> actual = category.getCategories().stream()
                 .map(Category::getName)

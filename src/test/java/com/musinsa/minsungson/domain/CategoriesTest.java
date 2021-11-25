@@ -36,7 +36,7 @@ class CategoriesTest {
     @DisplayName("새로운 카테고리를 추가한다.")
     @ParameterizedTest
     @MethodSource("getParametersForAdd")
-    void add(Category newCategory, int index, List<String> expected) {
+    void add(Category newCategory, Long index, List<String> expected) {
         categories.add(newCategory, index);
 
         List<String> actual = categories.getValue().stream()
@@ -51,14 +51,15 @@ class CategoriesTest {
                 Arguments.of(new Category("test4"), 3, List.of("test1", "test2", "test3", "test4")),
                 Arguments.of(new Category("test4"), 0, List.of("test4", "test1", "test2", "test3")),
                 Arguments.of(new Category("test4"), 1, List.of("test1", "test4", "test2", "test3")),
-                Arguments.of(new Category("test4"), 2, List.of("test1", "test2", "test4", "test3"))
+                Arguments.of(new Category("test4"), 2, List.of("test1", "test2", "test4", "test3")),
+                Arguments.of(new Category("test4"), null, List.of("test1", "test2", "test3", "test4"))
         );
     }
 
     @DisplayName("add()시 index는 음수이거나 현재 list 크기보다 클 수 없다.")
     @ParameterizedTest
     @ValueSource(ints = {-1, -2, -3, 4, 5, 6})
-    void addIndexCannotBeNegativeOrOverThenMaxSize(int index) {
+    void addIndexCannotBeNegativeOrOverThenMaxSize(Long index) {
         assertThatThrownBy(() -> categories.add(new Category("test"), index))
                 .isInstanceOf(IllegalCategoryIndexException.class)
                 .hasMessage("잘못된 카테고리 인덱스 번호 입니다.");
