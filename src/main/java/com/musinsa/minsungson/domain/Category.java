@@ -39,6 +39,10 @@ public class Category {
         this(null, name, new Categories(new ArrayList<>()), orderingNumber, parentId);
     }
 
+    public Category(Long id, String name, Long orderingNumber, Long parentId) {
+        this(id, name, new Categories(new ArrayList<>()), orderingNumber, parentId);
+    }
+
     public Category(Long id, String name, Categories categories, Long orderingNumber, Long parentId) {
         this.id = id;
         this.name = name;

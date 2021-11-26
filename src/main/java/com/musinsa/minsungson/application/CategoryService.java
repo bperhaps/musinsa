@@ -33,6 +33,8 @@ public class CategoryService {
 
         category.add(newCategory, request.getIndex());
 
+        readonlyCategoryRepository.save(new Category(newCategory.getId(), request.getName(), request.getIndex(), request.getParentId()));
+
         return newCategory.getId();
     }
 
@@ -67,10 +69,13 @@ public class CategoryService {
         newParent.add(category, request.getOrderingNumber());
 
         category.changeName(request.getName());
+        readonlyCategoryRepository.save(category);
     }
 
     public void delete(Long id) {
+        Category category = findCategoryById(id);
         categoryRepository.deleteById(id);
+        readonlyCategoryRepository.delete(category);
     }
 
     private Category findCategoryByParentId(Long id) {

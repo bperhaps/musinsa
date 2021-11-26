@@ -51,4 +51,13 @@ public class AcceptanceTest {
                 .then()
                 .extract();
     }
+
+    protected ExtractableResponse<Response> read(Long id) {
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/categories/" + id)
+                .then()
+                .extract();
+    }
 }

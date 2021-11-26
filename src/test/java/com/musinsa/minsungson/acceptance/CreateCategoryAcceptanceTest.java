@@ -1,5 +1,6 @@
 package com.musinsa.minsungson.acceptance;
 
+import com.musinsa.minsungson.presentation.dto.CategoryResponse;
 import com.musinsa.minsungson.presentation.dto.CreateCategoryRequest;
 import com.musinsa.minsungson.presentation.dto.UpdateCategoryRequest;
 import io.restassured.response.ExtractableResponse;
@@ -45,6 +46,23 @@ class CreateCategoryAcceptanceTest extends AcceptanceTest {
         int statusCode = delete(Long.valueOf(id)).statusCode();
 
         assertThat(statusCode).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("카테고리를 조회한다.")
+    @Test
+    void readCategories() {
+        String header = create(new CreateCategoryRequest("hello", 1L, 0L))
+                .header(HttpHeaders.LOCATION);
+        long id = Long.parseLong(extractId(header));
+
+        header = create(new CreateCategoryRequest("hello1", id, 0L)).header(HttpHeaders.LOCATION);
+        long id2 = Long.parseLong(extractId(header));
+
+        create(new CreateCategoryRequest("hello2", id2, 0L)).header(HttpHeaders.LOCATION);
+
+        CategoryResponse response = read(id).as(CategoryResponse.class);
+        assertThat(response.getCategories()).hasSize(1);
+        assertThat(response.getCategories().get(0).getCategories()).hasSize(1);
     }
 
     private String extractId(String header) {
