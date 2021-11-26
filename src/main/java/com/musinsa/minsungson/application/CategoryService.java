@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -36,6 +37,14 @@ public class CategoryService {
         readonlyCategoryRepository.save(new Category(newCategory.getId(), request.getName(), request.getIndex(), request.getParentId()));
 
         return newCategory.getId();
+    }
+
+    public List<CategoryResponse> readAll() {
+        Category category = readonlyCategoryRepository.findById(1L)
+                .orElseThrow(CategoryNotFoundException::new);
+
+        CategoryResponse response = toCategoryResponse(category);
+        return response.getCategories();
     }
 
     public CategoryResponse read(Long id) {

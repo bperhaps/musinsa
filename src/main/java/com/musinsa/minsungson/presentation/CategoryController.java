@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RequestMapping("/api/categories")
 @RestController
@@ -24,6 +25,13 @@ public class CategoryController {
         Long id = categoryService.create(request);
 
         return ResponseEntity.created(URI.create("/api/categories/" + id)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> readAll() {
+        List<CategoryResponse> categoryResponses = categoryService.readAll();
+
+        return ResponseEntity.ok(categoryResponses);
     }
 
     @GetMapping("/{id}")
