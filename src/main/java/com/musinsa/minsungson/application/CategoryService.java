@@ -2,22 +2,29 @@ package com.musinsa.minsungson.application;
 
 import com.musinsa.minsungson.domain.Category;
 import com.musinsa.minsungson.domain.CategoryRepository;
+import com.musinsa.minsungson.domain.ReadonlyCategoryRepository;
 import com.musinsa.minsungson.exception.CategoryNotFoundException;
 import com.musinsa.minsungson.exception.ParentNotFoundException;
+import com.musinsa.minsungson.presentation.dto.CategoryResponse;
 import com.musinsa.minsungson.presentation.dto.CreateCategoryRequest;
 import com.musinsa.minsungson.presentation.dto.UpdateCategoryRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class CategoryService {
     private static final long ROOT_ID = 1L;
 
     private final CategoryRepository categoryRepository;
+    private final ReadonlyCategoryRepository readonlyCategoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ReadonlyCategoryRepository readonlyCategoryRepository) {
         this.categoryRepository = categoryRepository;
+        this.readonlyCategoryRepository = readonlyCategoryRepository;
     }
 
     public Long create(CreateCategoryRequest request) {
@@ -27,6 +34,27 @@ public class CategoryService {
         category.add(newCategory, request.getIndex());
 
         return newCategory.getId();
+    }
+
+    public CategoryResponse read(Long id) {
+        Category category = readonlyCategoryRepository.findById(id)
+                .orElseThrow(CategoryNotFoundException::new);
+
+        return toCategoryResponse(category);
+    }
+
+    private CategoryResponse toCategoryResponse(Category category) {
+        return new CategoryResponse(
+                category.getId(),
+                category.getName(),
+                toCategoryResponses(category.getCategories())
+        );
+    }
+
+    private List<CategoryResponse> toCategoryResponses(List<Category> categories) {
+        return categories.stream()
+                .map(this::toCategoryResponse)
+                .collect(toList());
     }
 
     public void update(Long id, UpdateCategoryRequest request) {

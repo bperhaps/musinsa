@@ -1,6 +1,7 @@
 package com.musinsa.minsungson.presentation;
 
 import com.musinsa.minsungson.application.CategoryService;
+import com.musinsa.minsungson.presentation.dto.CategoryResponse;
 import com.musinsa.minsungson.presentation.dto.CreateCategoryRequest;
 import com.musinsa.minsungson.presentation.dto.UpdateCategoryRequest;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,13 @@ public class CategoryController {
         Long id = categoryService.create(request);
 
         return ResponseEntity.created(URI.create("/api/categories/" + id)).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> read(@PathVariable Long id) {
+        CategoryResponse response = categoryService.read(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
