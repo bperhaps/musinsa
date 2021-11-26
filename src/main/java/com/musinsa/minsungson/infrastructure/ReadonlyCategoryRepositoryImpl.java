@@ -47,7 +47,7 @@ public class ReadonlyCategoryRepositoryImpl implements ReadonlyCategoryRepositor
         cacheBasedOnOneId
                 .put(category.getId(), categoryColumns);
 
-        if(!category.getId().equals(category.getParentId())) {
+        if (!category.getId().equals(category.getParentId())) {
             cacheBasedOnParentId
                     .computeIfAbsent(category.getParentId(), i -> new HashSet<>())
                     .add(categoryColumns);
@@ -56,7 +56,7 @@ public class ReadonlyCategoryRepositoryImpl implements ReadonlyCategoryRepositor
 
     @Override
     public Optional<Category> findById(Long id) {
-        if(Objects.isNull(cacheBasedOnOneId.get(id))) {
+        if (Objects.isNull(cacheBasedOnOneId.get(id))) {
             return Optional.empty();
         }
 
@@ -72,9 +72,11 @@ public class ReadonlyCategoryRepositoryImpl implements ReadonlyCategoryRepositor
                 category.getParentId()
         );
 
-        cacheBasedOnParentId
-                .get(category.getParentId())
-                .remove(categoryColumns);
+        Set<CategoryColumns> subCategories = cacheBasedOnParentId
+                .get(category.getParentId());
+        if (!Objects.isNull(subCategories)) {
+            subCategories.remove(categoryColumns);
+        }
 
         cacheBasedOnOneId
                 .remove(category.getId());
@@ -82,7 +84,6 @@ public class ReadonlyCategoryRepositoryImpl implements ReadonlyCategoryRepositor
 
     private Category createCategory(Long id) {
         CategoryColumns categoryColumns = cacheBasedOnOneId.get(id);
-
 
         return new Category(
                 categoryColumns.getId(),
